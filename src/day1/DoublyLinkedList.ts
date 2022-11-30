@@ -7,18 +7,20 @@ type Node<T> = {
 export default class DoublyLinkedList<T> {
     public length: number;
     private head?: Node<T>;
-
+    private tail?: Node<T>;
     
 
     constructor() {
         this.length = 0;
+        this.head = undefined;
+        this.tail = undefined;
     }
 
     prepend(item: T): void {
         const node = {value: item} as Node<T>;
         this.length++;
         if(!this.head){
-            this.head = node;
+            this.head = this.tail = node;
             return;
         }
         node.next = this.head;
@@ -26,16 +28,18 @@ export default class DoublyLinkedList<T> {
         this.head = node;
 }
     insertAt(item: T, idx: number): void {
-        this.length++;
         if (idx > this.length) {
             throw new Error("the index is outside the list boundaries!");
-        }else if(idx === this.length){
+        }
+        if(idx === this.length){
             this.append(item);
             return;
-        }else if(idx === 0){
+        }
+        if(idx === 0){
             this.prepend(item);
             return;
         }
+        this.length++;
         let cur = this.head;
         for (let i = 0; i < idx && cur; i++) {
             cur = cur.next;
@@ -53,10 +57,18 @@ export default class DoublyLinkedList<T> {
 
 }
     append(item: T): void {
-
+        this.length++;
+        const node = {value: item} as Node<T>;
+        if(!this.tail){
+            this.head = this.tail = node;
+            return;
+        }
+        node.prev = this.tail;
+        this.tail.next = node;
+        this.tail = node;
 }
     remove(item: T): T | undefined {
-
+        
 }
     get(idx: number): T | undefined {
         let cur = this.head;
